@@ -1,3 +1,67 @@
-<h1>Hello world!</h1>
-<p>This is my first GitHub test.</p>
-<p>I am learning how Git works</p>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>My First D3 Chart</title>
+
+    <!-- Load D3.js from a CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+  </head>
+
+  <body>
+    <h1>My First Bar Chart</h1>
+
+    <!-- The chart will appear here -->
+    <div id="chart"></div>
+
+    <script>
+      const data = [
+        { name: "A", value: 1 },
+        { name: "B", value: 5 },
+        { name: "C", value: 8 },
+        { name: "D", value: 10 },
+      ];
+
+      const width = 500;
+      const height = 300;
+
+      const svg = d3
+        .select("#chart")
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height);
+
+      const x = d3
+        .scaleBand()
+        .domain(data.map((d) => d.name))
+        .range([40, width - 20])
+        .padding(0.2);
+
+      const y = d3
+        .scaleLinear()
+        .domain([0, d3.max(data, (d) => d.value)])
+        .range([height - 30, 20]);
+
+      svg
+        .selectAll("rect")
+        .data(data)
+        .enter()
+        .append("rect")
+        .attr("x", (d) => x(d.name))
+        .attr("y", (d) => y(d.value))
+        .attr("width", x.bandwidth())
+        .attr("height", (d) => height - 30 - y(d.value))
+        .attr("fill", "steelblue");
+
+      svg
+        .append("g")
+        .attr("transform", `translate(0, ${height - 30})`)
+        .call(d3.axisBottom(x));
+
+      svg
+        .append("g")
+        .attr("transform", "translate(40, 0)")
+        .call(d3.axisLeft(y));
+    </script>
+  </body>
+</html>
